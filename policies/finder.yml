@@ -1,0 +1,13 @@
+policies:
+  - name: find-c7nstorage
+    resource: azure.storage
+    mode:
+      type: container-periodic
+      schedule: "* * * * *"  # Run every minute as an example
+    filters:
+      - type: value
+        key: name
+        op: eq
+        value: ccustodianstorage
+    output:
+      - csv: c7nstorage-list.csv

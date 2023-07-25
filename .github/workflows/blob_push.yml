@@ -1,0 +1,25 @@
+name: Push to Azure Blob Storage
+on:
+  push:
+    branches:
+      - main  # Der Name deiner Haupt-Branch (main/master) hier einfügen
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Install Azure CLI
+      uses: azure/CLI@v1
+      with:
+        inlineScript: |
+          az extension add --name storage-preview
+          az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+          az storage blob upload-batch --account-name ccustodianstorage --account-key dsDs6MdFHH0a/3CsKbQzSYswAX4KhfmJsOIAVGex4mDVYMVtOyYzo3AfPwjdMWRM5Zrmppz4XDSU+AStNju0OA== --destination custodian-policies --source cloudcustodian/policies/*.yml  # Den richtigen Pfad zu deinem Ordner hier einfügen
+
+    - name: Cleanup Azure CLI
+      run: |
+        az extension remove --name storage-preview
+        az logout

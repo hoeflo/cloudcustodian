@@ -21,5 +21,4 @@ jobs:
 
     - name: Cleanup Azure CLI
       run: |
-        az extension remove --name storage-preview
         az logout
